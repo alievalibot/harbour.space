@@ -38,13 +38,19 @@ class Countdown:
     """
 
     def __init__(self, n: int) -> None:
-        raise NotImplementedError
+        self.current = n
+        #raise NotImplementedError
 
     def __iter__(self) -> Iterator[int]:
-        raise NotImplementedError
+        return self
+        #raise NotImplementedError
 
     def __next__(self) -> int:
-        raise NotImplementedError
+        if self.current < 0:
+            raise StopIteration
+        value = self.current
+        self.current -= 1
+        return value
 
 
 class StepIterator:
@@ -62,13 +68,25 @@ class StepIterator:
     """
 
     def __init__(self, values: list[Any], step: int = 2) -> None:
-        raise NotImplementedError
+        if self.step <= 0:  
+            raise ValueError
+        self.values = values
+        self.step = step
+        self.current = 0
+        
+    
 
     def __iter__(self) -> Iterator[Any]:
-        raise NotImplementedError
+        return self
+        #raise NotImplementedError
+    
 
     def __next__(self) -> Any:
-        raise NotImplementedError
+        if self.current >= len(self.values):
+            raise StopIteration
+        result = self.values[self.current]
+        self.current += self.step
+        return result
 
 
 class UniqueConsecutiveIterator:
@@ -82,13 +100,21 @@ class UniqueConsecutiveIterator:
     """
 
     def __init__(self, values: list[Any]) -> None:
+        self.values = values
+        self.before = object()
         raise NotImplementedError
 
     def __iter__(self) -> Iterator[Any]:
+        return self
         raise NotImplementedError
 
     def __next__(self) -> Any:
-        raise NotImplementedError
+        while self.values:
+                value = self.values.pop(0)
+                if value != self.before:
+                    self.before = value
+                    return value
+        raise StopIteration
 
 
 class CircularIterator:
@@ -103,13 +129,23 @@ class CircularIterator:
     """
 
     def __init__(self, sequence: Sequence[Any], k: int) -> None:
-        raise NotImplementedError
+        if not sequence or k < 0:
+            raise ValueError
+        self.sequence = sequence
+        self.k = k
+        self.index = 0
+        self.count = 0
 
     def __iter__(self) -> Iterator[Any]:
-        raise NotImplementedError
+        return self
 
     def __next__(self) -> Any:
-        raise NotImplementedError
+        if self.count >= self.k:
+            raise StopIteration
+        value = self.sequence(self.index)
+        self.index = (self.index - 1) % len(self.sequence)
+        self.count += 1
+        return value
 
 
 class FlattenIterator:
@@ -143,6 +179,11 @@ def read_words(filename: str) -> Iterator[str]:
     >>> list(read_words("sample.txt"))
     ['one', 'two', 'three']
     """
+    with open("mock_read_words.txt", "r") as f:
+        for line in f:
+            for word in line.split():
+                yield word
+
     raise NotImplementedError
 
 
@@ -156,6 +197,7 @@ def batch(iterable: Iterable[Any], size: int) -> Iterator[list[Any]]:
     >>> list(batch([1, 2, 3, 4, 5, 6, 7], 3))
     [[1, 2, 3], [4, 5, 6], [7]]
     """
+    
     raise NotImplementedError
 
 
@@ -271,3 +313,6 @@ def lru_cache(maxsize: int) -> Callable[[Callable[..., Any]], Callable[..., Any]
     (4, 9, 4)
     """
     raise NotImplementedError
+
+
+

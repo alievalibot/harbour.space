@@ -192,3 +192,263 @@ Rules:
   - otherwise create value using `default_factory()`, store, return.
 - If `default_factory` is not callable, treat it as `None`.
 """
+#1
+class User:
+  def __init__(self, name):
+    self.name = name
+
+  def say_hi(self):
+        print(f"Hello, I am {self.name}")
+
+#2
+class BankAccount:
+  def __init__(self,owner,balance):
+    self.owner = owner
+    if balance >= 0:
+      self.balance = balance
+    else:
+      self.balance = 0.0
+      
+      
+  def deposit(self,amount):
+    if amount > 0: 
+      self.balance += amount
+    
+    
+  def withdraw(self,amount):
+    if amount > 0 and amount <= self.balance:
+      self.balance -= amount
+
+#3
+class Team:
+  def __init__(self):
+    self.store = []
+  
+  def add(self,name):
+    self.store.append(name)
+    
+  def __len(self):
+    return len(self.store)
+        
+        
+#7
+class ShopingCart:
+  def __init__(self):
+    self.total_qty = 0
+    self.total_pric = 0
+    
+  def add_item(self,name,price,qty):
+    if price < 0 or qty <= 0:
+      return
+    self.total_qty += qty
+    self.total_pric += price * qty
+    
+  def total_items(self):
+    return self.total_qty
+  
+    
+  def total_price (self):
+    return self.total_pric
+  
+  def __repr__(self):
+    return "ShopingCart"
+
+
+
+#8
+class Classroom:
+    school_name = "Harbour Space" 
+
+    def __init__(self, group_name):
+        self.group_name = group_name
+        self.students = []
+
+    def add_student(self, name):
+        self.students.append(name)
+
+    def __len__(self):
+        return len(self.students)
+
+    def set_school_name(self, new_name):
+        Classroom.school_name = new_name
+  
+#9
+class Rectangle:
+  def __init__(self,width,height):
+        if height >= 0 and width >= 0:
+          self.width = width
+          self.height = height
+  
+  def area(self):
+    self.a = self.width * self.height
+    return self.a
+  
+  def perimeter(self):
+    self.p = (self.width + self.height) * 2
+    return self.p
+
+    
+#10
+class Playlist:
+ def __init__(self):
+  self.songs = []
+
+ def add(self, song):
+  self.songs.append(song)
+
+ def __contains__(self, song):
+  return song in self.songs
+
+ def __len__(self):
+  return len(self.songs)
+
+ def __iter__(self):
+  return iter(self.songs)
+
+
+#11
+class Product:
+  def __init__(self, name, price):
+    self.name = name
+    if price < 0:
+      self.price = 0.0
+    else:
+      self.price = price
+
+  def get_price(self):
+    return self.price
+
+  def set_price(self, value):
+    if value < 0:
+      self.price = 0.0
+    else:
+      self.price = value
+
+  def apply_discount(self, percent):
+    if percent < 0:
+      percent = 0.0
+    elif percent > 100:
+      percent = 100.0
+
+    discount_amount = self.price * (percent / 100)
+    self.price = self.price - discount_amount
+
+#12
+class Person:
+  def __init__(self, name):
+    self.name = name
+
+  def describe(self):
+    return f"Person(name={self.name})"
+
+
+class Student(Person):
+  def __init__(self, name, group):
+    super().__init__(name)
+    self.group = group
+
+  def describe(self):
+    return f"Student(name={self.name}, group={self.group})"
+
+#13
+class Point2D:
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+
+  def distance_to(self, other):
+    dx = self.x - other.x
+    dy = self.y - other.y
+    return (dx * dx + dy * dy) ** 0.5
+
+  def __eq__(self, other):
+    if not isinstance(other, Point2D):
+        return False
+    return self.x == other.x and self.y == other.y
+
+  def __repr__(self):
+    return f"Point2D({self.x}, {self.y})"
+
+#14
+class Inventory:
+  def __init__(self):
+    self.items = {}
+
+  def add(self, name, qty=1):
+    if qty <= 0:
+        return
+    if name in self.items:
+        self.items[name] += qty
+    else:
+        self.items[name] = qty
+
+  def remove(self, name, qty=1):
+    if qty <= 0 or name not in self.items:
+        return
+    if self.items[name] <= qty:
+        del self.items[name]
+    else:
+        self.items[name] -= qty
+
+  def count(self, name):
+    if name in self.items:
+        return self.items[name]
+    return 0
+
+  def __contains__(self, name):
+    return name in self.items
+
+  def __len__(self):
+    total = 0
+    for qty in self.items.values():
+      total += qty
+      return total
+
+
+#15
+class CourseCatalog:
+  def __init__(self):
+    self.courses = {}
+
+  def add_course(self, code, title):
+    self.courses[code] = title
+
+  def get_title(self, code):
+    if code in self.courses:
+        return self.courses[code]
+    return None
+
+  def __iter__(self):
+    sorted_list = []
+    for code in sorted(self.courses):
+        sorted_list.append((code, self.courses[code]))
+    return iter(sorted_list)
+
+  def __len__(self):
+    return len(self.courses)
+  
+#16
+class DefaultDict:
+  def __init__(self, default_factory=None):
+    self.default_factory = default_factory if callable(default_factory) else None
+    self.data = {}
+
+  def __getitem__(self, key):
+    if key in self.data:
+        return self.data[key]
+
+    if self.default_factory is None:
+        return None
+
+    value = self.default_factory()
+    self.data[key] = value
+    return value
+
+  def __setitem__(self, key, value):
+    self.data[key] = value
+
+  def __contains__(self, key):
+    return key in self.data
+
+  def __len__(self):
+    return len(self.data)
