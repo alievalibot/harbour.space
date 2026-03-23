@@ -19,7 +19,8 @@ app = FastAPI()
 class TaskIn(BaseModel):
     # TODO: add fields
     pass
-
+    title: str
+    completed: bool = False  
 
 class TaskOut(BaseModel):
     # TODO: add id + task fields
@@ -27,15 +28,30 @@ class TaskOut(BaseModel):
 
 
 # TODO: create in-memory storage and next_id counter
+    id: int
+    title: str
+    completed: bool
+
+
+storage: dict[int, TaskOut] = {}
+next_id: int = 1
 
 
 @app.post("/tasks", response_model=TaskOut, status_code=status.HTTP_201_CREATED)
 def create_task(payload: TaskIn) -> TaskOut:
+    global next_id
+    task = TaskOut(id=next_id, title=payload.title, completed=payload.completed)
+    storage[next_id] = task
+    next_id += 1
+    return task
+
     # TODO: create/store/return task
     raise NotImplementedError
 
 
 @app.get("/tasks", response_model=list[TaskOut])
 def get_tasks() -> list[TaskOut]:
+    return list(storage.values())
+
     # TODO: return all tasks
     raise NotImplementedError

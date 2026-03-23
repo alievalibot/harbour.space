@@ -20,17 +20,22 @@ app = FastAPI()
 
 
 class TaskIn(BaseModel):
+    title: str
+    completed: bool = False
+
     # TODO: add fields
     pass
 
 
 @app.get("/")
 def root() -> dict[str, str]:
+    return {"status": "ok", "service": "lecture-05"}
     # TODO: return small health response
     raise NotImplementedError
 
 
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 def create_task(payload: TaskIn) -> dict:
+    return {"title": payload.title, "completed": payload.completed}
     # TODO: return created task payload
-    raise NotImplementedError
+    #raise NotImplementedError

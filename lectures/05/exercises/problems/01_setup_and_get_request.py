@@ -26,6 +26,25 @@ def main() -> None:
     # TODO: implement request flow here.
     # Suggested variables: response, data
     pass
+    response = requests.get(URL)
+
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print("HTTP error:", e)
+        return
+
+    print("Status code:", response.status_code)
+    print("Content-Type:", response.headers["Content-Type"])
+    print("Raw body:", response.text)
+
+    data = response.json()
+    print("Parsed JSON:", data)
+
+    print("ID:", data["id"])
+    print("Title:", data["title"])
+    print("Completed:", data["completed"])
+
 
 
 if __name__ == "__main__":
